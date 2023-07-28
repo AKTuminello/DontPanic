@@ -1,0 +1,6 @@
+yarn run v1.22.19
+$ expo start
+Starting project at /Users/anntuminello/Developer/DontPanic
+Starting Metro Bundler
+Waiting on http://localhost:8081
+Logs for your project will appear below.

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Animated } from 'react-native';
+import { View, TouchableOpacity, Animated, Text } from 'react-native';
 
 const BlobBreathing = () => {
   const [isBreathing, setBreathing] = useState(false);
@@ -55,7 +55,8 @@ const BlobBreathing = () => {
         onPressIn={handleTouchStart}
         onPressOut={handleTouchEnd}
       >
-      <View style={styles.blob} />
+        {/* Placeholder text for the blob image */}
+        <Text style={styles.blobPlaceholder}>Blob Image Here</Text>
       </TouchableOpacity>
     </View>
   );
@@ -71,11 +72,13 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  blob: {
-    backgroundColor: 'yellow', // Replace with your blob's background color or image
+  blobPlaceholder: {
+    backgroundColor: 'yellow',
     width: 100,
     height: 100,
     borderRadius: 50,
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
 };
 
