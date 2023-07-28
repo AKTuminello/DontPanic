@@ -55,9 +55,7 @@ const BlobBreathing = () => {
         onPressIn={handleTouchStart}
         onPressOut={handleTouchEnd}
       >
-        {/* Your happy little blob (lava lamp) image here */}
-        {/* You can replace the view with your actual blob image */}
-        <View style={styles.blob} />
+      <View style={styles.blob} />
       </TouchableOpacity>
     </View>
   );
