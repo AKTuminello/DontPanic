@@ -56,7 +56,7 @@ const BlobBreathing = () => {
         onPressOut={handleTouchEnd}
       >
         {/* Placeholder text for the blob image */}
-        <Text style={styles.blobPlaceholder}>Blob Image Here</Text>
+        <Text style={styles.blobPlaceholder}>Don't Panic!</Text>
       </TouchableOpacity>
     </View>
   );
@@ -73,7 +73,7 @@ const styles = {
     alignItems: 'center',
   },
   blobPlaceholder: {
-    backgroundColor: 'yellow',
+    backgroundColor: 'red',
     width: 100,
     height: 100,
     borderRadius: 50,

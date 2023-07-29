@@ -1,8 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import BlobBreathing from '../components/BlobBreathing';
 
 const HomeScreen = ({ navigation }) => {
+  const handleGoToFunStuff = () => {
+
+    navigation.navigate('FunStuffScreen');
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to the Home Screen!</Text>
@@ -15,11 +21,15 @@ const HomeScreen = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Go to Upload Screen</Text>
       </TouchableOpacity>
+
+      
+      <TouchableOpacity style={styles.funStuffButton} onPress={handleGoToFunStuff}>
+        <Ionicons name="happy-outline" size={24} color="white" />
+        <Text style={styles.funStuffButtonText}>I'm okay right now, take me to the fun stuff</Text>
+      </TouchableOpacity>
     </View>
   );
 };
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -38,11 +48,26 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
+    marginBottom: 10,
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  funStuffButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'blue',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  funStuffButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 10,
   },
 });
 

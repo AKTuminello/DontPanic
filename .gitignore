@@ -33,3 +33,8 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+
+# Ignore google-services.json and firebaseConfig.js
+google-services.json
+firebaseConfig.js
