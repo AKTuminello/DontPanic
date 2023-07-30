@@ -7,32 +7,14 @@ import { db } from '../../firebaseConfig';
 
 const FunStuffScreen = () => {
   const [selectedBlend, setSelectedBlend] = useState(null);
-  const [defaultBlend, setDefaultBlend] = useState(null);
   const [audio, setAudio] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [blendsMenu, setBlendsMenu] = useState([]);
+  const [isMusicOn, setIsMusicOn] = useState(false); 
 
   useEffect(() => {
-    fetchDefaultBlend();
     fetchBlendsFromFirestore();
   }, []);
-
-  const fetchDefaultBlend = async () => {
-    try {
-      const defaultBlendId = await AsyncStorage.getItem('defaultBlend');
-      if (defaultBlendId) {
-        const docRef = doc(db, 'OilBlends', defaultBlendId);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setDefaultBlend(docSnap.data());
-        } else {
-          console.log('No such document!');
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching default blend:', error);
-    }
-  };
 
   const fetchBlendsFromFirestore = async () => {
     try {
@@ -42,6 +24,17 @@ const FunStuffScreen = () => {
     } catch (error) {
       console.error('Error fetching blends:', error);
     }
+  };
+
+  const toggleMusic = async () => {
+    if (isMusicOn) {
+      await stopAudio();
+    } else {
+      if (selectedBlend?.audioUrl) {
+        await playAudio(selectedBlend.audioUrl);
+      }
+    }
+    setIsMusicOn(!isMusicOn);
   };
 
   const playAudio = async (fileUrl) => {
@@ -63,18 +56,16 @@ const FunStuffScreen = () => {
   };
 
   const handleBlendSelection = async (blendData) => {
+    if (selectedBlend && selectedBlend.id === blendData.id) {
+      return;
+    }
+  
     await stopAudio();
-    if (blendData.audioUrl) {
+    if (blendData.audioUrl && isMusicOn) {
       await playAudio(blendData.audioUrl);
     }
     setSelectedBlend(blendData);
-    setDefaultBlend(blendData);
-    try {
-      await AsyncStorage.setItem('defaultBlend', blendData.name);
-    } catch (error) {
-      console.error('Error storing default blend:', error);
-    }
-  };
+  };  
 
   return (
     <View style={styles.container}>
@@ -88,6 +79,9 @@ const FunStuffScreen = () => {
           <Text style={styles.buttonText}>{item.name}</Text>
         </TouchableOpacity>
       ))}
+      <TouchableOpacity style={styles.toggleButton} onPress={() => toggleMusic()}>
+        <Text style={styles.toggleButtonText}>{isMusicOn ? 'Music On' : 'Music Off'}</Text>
+      </TouchableOpacity>
       {selectedBlend && (
         <View style={styles.selectedBlendContainer}>
           <Text style={styles.selectedBlendText}>{selectedBlend.text}</Text>
@@ -96,46 +90,57 @@ const FunStuffScreen = () => {
       )}
     </View>
   );
-}
-
+};
 
 const styles = StyleSheet.create({
-container: {
-  flex: 1,
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: '#f0f0f0',
-},
-header: {
-  fontSize: 24,
-  fontWeight: 'bold',
-  marginBottom: 20,
-},
-button: {
-  backgroundColor: 'blue',
-  paddingVertical: 10,
-  paddingHorizontal: 20,
-  borderRadius: 5,
-  marginVertical: 5,
-},
-buttonText: {
-  color: 'white',
-  fontSize: 16,
-  fontWeight: 'bold',
-},
-selectedBlendContainer: {
-  marginTop: 20,
-  alignItems: 'center',
-},
-selectedBlendText: {
-  fontSize: 18,
-  marginBottom: 10,
-},
-image: {
-  width: 200,
-  height: 200,
-  resizeMode: 'cover',
-},
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#f0f0f0',
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: 'blue',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginVertical: 5,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  selectedBlendContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  selectedBlendText: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    resizeMode: 'cover',
+  },
+  toggleButton: {
+    backgroundColor: 'green',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginVertical: 10,
+  },
+  toggleButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 export default FunStuffScreen;
