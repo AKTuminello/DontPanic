@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 
-
 const FunStuffScreen = () => {
   const [selectedBlend, setSelectedBlend] = useState(null);
   const [audio, setAudio] = useState(null);
@@ -72,26 +71,24 @@ const FunStuffScreen = () => {
 
   return (
     <View style={styles.container}>
-
-      <TouchableOpacity style={styles.toggleButton} onPress={() => toggleMusic()}>
-        <Text style={styles.toggleButtonText}>{isMusicOn ? 'Music On' : 'Music Off'}</Text>
-      </TouchableOpacity>
-
       {selectedBlend && (
         <View style={styles.selectedBlendContainer}>
           <Text style={styles.selectedBlendText}>{selectedBlend.text}</Text>
           <Image source={{ uri: selectedBlend.imageUrl }} style={styles.image} />
         </View>
       )}
-
-      <Text style={styles.header}>I want to feel more...</Text>
-
+  
+      <View style={styles.bottomBar}>
+        <FAB icon={isMusicOn ? "music" : "music-off"} onPress={toggleMusic} style={styles.fab} />
+        <Text style={styles.header}>I want to feel more...</Text>
+      </View>
+  
       <Portal>
         <FAB.Group
           open={isFabOpen}
           icon={isFabOpen ? 'close' : 'plus'}
           actions={blendsMenu.map((blend) => ({
-            icon: 'playlist-play', 
+            icon: 'playlist-play', // replace with an icon
             label: blend.name,
             onPress: () => handleBlendSelection(blend),
           }))}
@@ -107,29 +104,24 @@ const FunStuffScreen = () => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#f0f0f0',
+    paddingBottom: 10,
+  },
+  bottomBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fab: {
+    marginHorizontal: 10,
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  button: {
-    backgroundColor: 'blue',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginVertical: 5,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
     fontWeight: 'bold',
   },
   selectedBlendContainer: {
@@ -144,18 +136,6 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     resizeMode: 'cover',
-  },
-  toggleButton: {
-    backgroundColor: 'green',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginVertical: 10,
-  },
-  toggleButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
 
