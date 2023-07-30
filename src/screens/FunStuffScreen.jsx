@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Audio } from 'expo-av';
+import { FAB, Portal } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
+
 
 const FunStuffScreen = () => {
   const [selectedBlend, setSelectedBlend] = useState(null);
   const [audio, setAudio] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [blendsMenu, setBlendsMenu] = useState([]);
-  const [isMusicOn, setIsMusicOn] = useState(false); 
+  const [isMusicOn, setIsMusicOn] = useState(false);
+  const [isFabOpen, setIsFabOpen] = useState(false);
 
   useEffect(() => {
     fetchBlendsFromFirestore();
@@ -69,34 +72,47 @@ const FunStuffScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>I want to feel more...</Text>
-      {blendsMenu.map((item) => (
-        <TouchableOpacity
-          key={item.id}
-          style={styles.button}
-          onPress={() => handleBlendSelection(item)}
-        >
-          <Text style={styles.buttonText}>{item.name}</Text>
-        </TouchableOpacity>
-      ))}
+
       <TouchableOpacity style={styles.toggleButton} onPress={() => toggleMusic()}>
         <Text style={styles.toggleButtonText}>{isMusicOn ? 'Music On' : 'Music Off'}</Text>
       </TouchableOpacity>
+
       {selectedBlend && (
         <View style={styles.selectedBlendContainer}>
           <Text style={styles.selectedBlendText}>{selectedBlend.text}</Text>
           <Image source={{ uri: selectedBlend.imageUrl }} style={styles.image} />
         </View>
       )}
+
+      <Text style={styles.header}>I want to feel more...</Text>
+
+      <Portal>
+        <FAB.Group
+          open={isFabOpen}
+          icon={isFabOpen ? 'close' : 'plus'}
+          actions={blendsMenu.map((blend) => ({
+            icon: 'playlist-play', 
+            label: blend.name,
+            onPress: () => handleBlendSelection(blend),
+          }))}
+          onStateChange={({ open }) => setIsFabOpen(open)}
+          onPress={() => {
+            if (isFabOpen) {
+              // do something if the FAB is open
+            }
+          }}
+        />
+      </Portal>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     backgroundColor: '#f0f0f0',
   },
   header: {

@@ -1,18 +1,20 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeScreen from '../screens/HomeScreen';
 import UploadFileScreen from '../screens/UploadFileScreen';
-import FunStuffScreen from '../screens/FunStuffScreen'; // Import the FunStuffScreen
+import FunStuffScreen from '../screens/FunStuffScreen';
+import AuthenticationScreen from '../screens/AuthenticationScreen';
 
-const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
 const AppNavigator = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Upload" component={UploadFileScreen} />
-      <Tab.Screen name="FunStuffScreen" component={FunStuffScreen} /> 
-    </Tab.Navigator>
+    <Drawer.Navigator initialRouteName="Home">
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Upload" component={UploadFileScreen} />
+      <Drawer.Screen name="FunStuff" component={FunStuffScreen} />
+      <Drawer.Screen name="Authorization" component={AuthenticationScreen} />
+    </Drawer.Navigator>
   );
 };
 

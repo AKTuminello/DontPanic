@@ -5,7 +5,7 @@ import BlobBreathing from '../components/BlobBreathing';
 
 const HomeScreen = ({ navigation }) => {
   const handleGoToFunStuff = () => {
-    navigation.navigate('FunStuffScreen');
+    navigation.navigate('FunStuff');
   };
 
   return (
