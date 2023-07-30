@@ -1,63 +1,87 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, TouchableOpacity, Animated, Text } from 'react-native';
 
 const BlobBreathing = () => {
-  const [isBreathing, setBreathing] = useState(false);
-  const animatedBlobSize = new Animated.Value(100);
+  const animatedScale = useRef(new Animated.Value(1)).current;
+  const animatedColor = useRef(new Animated.Value(0)).current;
+  const [animation, setAnimation] = useState(null);
+
+  const interpolateColor = animatedColor.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['rgb(255,0,0)', 'rgb(0,0,255)']
+  });
 
   const startBreathing = () => {
-    setBreathing(true);
-    Animated.loop(
+    const breathAnimation = Animated.loop(
       Animated.sequence([
-        Animated.timing(animatedBlobSize, {
-          toValue: 120,
+        Animated.timing(animatedScale, {
+          toValue: 2.5,
           duration: 4000,
           useNativeDriver: false,
         }),
-        Animated.timing(animatedBlobSize, {
-          toValue: 120,
-          duration: 7000,
-          useNativeDriver: false,
-        }),
-        Animated.timing(animatedBlobSize, {
-          toValue: 100,
-          duration: 8000,
-          useNativeDriver: false,
-        }),
+        Animated.parallel([
+          Animated.timing(animatedScale, {
+            toValue: 2.5,
+            duration: 7000,
+            useNativeDriver: false,
+          }),
+          Animated.timing(animatedColor, {
+            toValue: 1,
+            duration: 7000,
+            useNativeDriver: false,
+          }),
+        ]),
+        Animated.parallel([
+          Animated.timing(animatedScale, {
+            toValue: 1,
+            duration: 8000,
+            useNativeDriver: false,
+          }),
+          Animated.timing(animatedColor, {
+            toValue: 0,
+            duration: 8000,
+            useNativeDriver: false,
+          }),
+        ]),
       ])
-    ).start(() => {
-      setBreathing(false);
-    });
+    );
+
+    breathAnimation.start();
+    setAnimation(breathAnimation);
   };
 
   const handleTouchStart = () => {
-    Animated.timing(animatedBlobSize, {
-      toValue: 100,
-      duration: 2000,
-      useNativeDriver: false,
-    }).start(() => {
-      startBreathing();
-    });
+    startBreathing();
   };
 
   const handleTouchEnd = () => {
-    if (isBreathing) {
-      // Stop the breathing animation
-      animatedBlobSize.stopAnimation();
-      setBreathing(false);
+    if (animation) {
+      animation.stop();
+      setAnimation(null);
+      animatedScale.setValue(1);
+      animatedColor.setValue(0);
     }
+  };
+
+  const scale = {
+    transform: [
+      {
+        scale: animatedScale,
+      },
+    ],
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={[styles.blobContainer, { height: animatedBlobSize, width: animatedBlobSize }]}
-        onPressIn={handleTouchStart}
-        onPressOut={handleTouchEnd}
-      >
-        {/* Placeholder text for the blob image */}
-        <Text style={styles.blobPlaceholder}>Don't Panic!</Text>
-      </TouchableOpacity>
+      <Animated.View style={[styles.blobContainer, scale, { backgroundColor: interpolateColor }]}>
+        <TouchableOpacity
+          style={styles.innerContainer}
+          onPressIn={handleTouchStart}
+          onPressOut={handleTouchEnd}
+        >
+          <Text style={styles.blobPlaceholder}>Don't Panic!</Text>
+        </TouchableOpacity>
+      </Animated.View>
     </View>
   );
 };
@@ -71,12 +95,18 @@ const styles = {
   blobContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  blobPlaceholder: {
-    backgroundColor: 'red',
     width: 100,
     height: 100,
     borderRadius: 50,
+  },
+  innerContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+  },
+  blobPlaceholder: {
+    color: 'white',
     textAlign: 'center',
     textAlignVertical: 'center',
   },
