@@ -5,7 +5,6 @@ import BlobBreathing from '../components/BlobBreathing';
 
 const HomeScreen = ({ navigation }) => {
   const handleGoToFunStuff = () => {
-
     navigation.navigate('FunStuffScreen');
   };
 
@@ -15,14 +14,6 @@ const HomeScreen = ({ navigation }) => {
 
       <BlobBreathing />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('Upload')}
-      >
-        <Text style={styles.buttonText}>Go to Upload Screen</Text>
-      </TouchableOpacity>
-
-      
       <TouchableOpacity style={styles.funStuffButton} onPress={handleGoToFunStuff}>
         <Ionicons name="happy-outline" size={24} color="white" />
         <Text style={styles.funStuffButtonText}>I'm okay right now, take me to the fun stuff</Text>
@@ -42,18 +33,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-  },
-  button: {
-    backgroundColor: 'blue',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
   funStuffButton: {
     flexDirection: 'row',
