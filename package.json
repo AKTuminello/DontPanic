@@ -11,6 +11,7 @@
   "dependencies": {
     "@babel/preset-env": "^7.1.6",
     "@expo/webpack-config": "^18.1.2",
+    "@react-native-async-storage/async-storage": "^1.19.1",
     "@react-native-firebase/app": "^18.3.0",
     "@react-native-firebase/firestore": "^18.3.0",
     "@react-navigation/bottom-tabs": "^6.5.8",
